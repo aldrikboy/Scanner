@@ -4,8 +4,6 @@
 #include "DHTSensor.hpp"
 #include "DHT.h"
 
-#define DHTTYPE DHT11
-
 class TemperatureSensor : public Sensor, DHTSensor
 {
 public:

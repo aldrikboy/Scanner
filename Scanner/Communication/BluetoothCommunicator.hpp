@@ -18,11 +18,6 @@ public:
     void SetupConnection();
 
 private:
-    // Default bluetooth settings
-    bool allowAutoConnect = true;
-    bool allowConnection = true;
-    bool isSlave = true;
-
     SoftwareSerial blueToothSerial;
     char *displayName = 0;
 
@@ -63,7 +58,7 @@ void BluetoothCommunicator::SetupConnection()
     blueToothSerial.print("\r\n+STWMOD=0\r\n");
 
     // set the bluetooth name as "SeeedBTSlave"
-    blueToothSerial.print("\r\n+STNA=SeeedBTSlave\r\n");
+    blueToothSerial.print("\r\n+STNA=" + (String)this->displayName + "\r\n");
 
     // Permit Paired device to connect me
     blueToothSerial.print("\r\n+STOAUT=1\r\n");
