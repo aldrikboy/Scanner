@@ -53,20 +53,22 @@ void SampleCollector::CollectSamples(SensorManager *manager)
 {
     // Retrieve current value of all sensors.
     SampleCollection collection;
+    collection.sampleCount = 0;
+
     collection.timestamp = millis(); // get epoch here
     for (int i = 0; i < manager->getSensorCount(); i++)
     {
         Sensor *sensor = manager->getSensor(i);
-        collection.sampleCount++;
 
         if (sensor)
         {
-            collection.samples[i].identifier = sensor->identifier;
-            collection.samples[i].sample = sensor->GetSample();
-            Serial.println(sensor->GetSample());
-            if (!sensor->IsSampleValid(collection.samples[i].sample))
+            collection.samples[collection.sampleCount].identifier = sensor->identifier;
+            collection.samples[collection.sampleCount].sample = sensor->GetSample();
+
+            // If sample is invalid, ignore it.
+            if (sensor->IsSampleValid(collection.samples[collection.sampleCount].sample))
             {
-                collection.samples[i].sample = INVALID_VALUE;
+                collection.sampleCount++;
             }
         }
     }

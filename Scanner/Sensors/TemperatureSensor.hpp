@@ -29,5 +29,5 @@ float TemperatureSensor::GetSample()
 
 bool TemperatureSensor::IsSampleValid(float sample)
 {
-    return true;
+    return !isnan(sample);
 }
