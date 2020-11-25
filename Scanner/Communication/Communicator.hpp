@@ -1,18 +1,25 @@
 // This is the base class for all communicators.
 // This class should not be instantiated.
 
+// https://github.com/ricaun/ArduinoUniqueID
+
 #pragma once
+
+#include "MessageHandler.hpp"
+#include "../SampleCollector.hpp"
 
 class Communicator
 {
 public:
     bool IsConnected();
     virtual void SetupConnection(){};
-    void HandleIncommingMessages();
+    void HandleIncommingMessages(SampleCollector *sampleCollector);
     Communicator(){};
 
 private:
     bool connected = false;
+    String messageBuffer = "";
+    MessageHandler messageHandler;
 
 protected:
     void setConnected(bool connected)
@@ -29,15 +36,32 @@ protected:
     virtual void SendData(char data) = 0;
 };
 
-void Communicator::HandleIncommingMessages()
+void Communicator::HandleIncommingMessages(SampleCollector *sampleCollector)
 {
     char recvChar;
-    if (this->DataAvailable())
+    while (this->DataAvailable())
     {
         recvChar = this->ReadData();
-        Serial.print(recvChar);
+
+        // Beginning of protocol message
+        if (recvChar == '{')
+            messageBuffer = "";
+
+        messageBuffer += recvChar;
+
+        // End of protocol message
+        if (recvChar == '}')
+        {
+            String response = messageHandler.HandleMessage(messageBuffer, sampleCollector);
+            for (char &c : response)
+            {
+                this->SendData(c);
+            }
+        }
     }
-    if (Serial.available())
+
+    // For debugging purposes, send data from serial to communicator.
+    while (Serial.available())
     {
         recvChar = Serial.read();
         this->SendData(recvChar);
