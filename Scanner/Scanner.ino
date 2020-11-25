@@ -12,6 +12,8 @@
 TODO
 - Make bluetoothConnector use parameters when setting up connection
 - Get epoch timestamp for sampleCollection
+- Set sample interval to 4 hours?
+- Find out how much heap we have left for sample buffer
 
 */
 

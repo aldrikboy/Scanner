@@ -4,9 +4,11 @@
 
 #include "Sensors/Sensor.hpp"
 #include "Sensors/TemperatureSensor.hpp"
+#include "Sensors/HumiditySensor.hpp"
 
 // Pin configuration
 #define PIN_TEMPERATURE 3
+#define PIN_HUMIDITY 3
 
 class SensorManager
 {
@@ -32,5 +34,6 @@ private:
 
 void SensorManager::SetupSensors()
 {
+    sensors[sensorCount++] = new HumiditySensor('L', PIN_HUMIDITY);
     sensors[sensorCount++] = new TemperatureSensor('C', PIN_TEMPERATURE);
 }
