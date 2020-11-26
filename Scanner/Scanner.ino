@@ -6,6 +6,8 @@
 #include "SensorManager.hpp"
 
 #include "SampleCollector.hpp"
+#include "StatusManager.hpp"
+#include "PowerManager.hpp"
 
 /*
 
@@ -27,13 +29,25 @@ void setup()
 
     sensorManager->SetupSensors();
     communicator->SetupConnection();
+    StatusManager::Setup();
 }
 
 void loop()
 {
     delay(1000);
+
+    StatusManager::Show(0x0000FF, 2); // Notify about sampling
     sampleCollector->CollectSamples(sensorManager);
 
     if (communicator->IsConnected())
+    {
+        StatusManager::Show(0x00FF00, 2); // Notify about message handling
         communicator->HandleIncommingMessages(sampleCollector);
+    }
+    else
+    {
+        StatusManager::Show(0xFF0000, 2); // Notify about communication error
+    }
+
+    //PowerManager::WaitForNextIteration();
 }
