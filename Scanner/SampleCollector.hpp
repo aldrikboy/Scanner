@@ -3,6 +3,7 @@
 #include "SensorManager.hpp"
 
 #include <stdio.h>
+#include "TimeManager.hpp"
 
 #define MAX_SAMPLE_STORAGE 10
 #define INVALID_VALUE -999
@@ -17,7 +18,7 @@ public:
 class SampleCollection
 {
 public:
-    unsigned long timestamp;
+    time_t timestamp;
     Sample samples[MAX_SENSORS];
     int sampleCount = 0;
 };
@@ -55,7 +56,7 @@ void SampleCollector::CollectSamples(SensorManager *manager)
     SampleCollection collection;
     collection.sampleCount = 0;
 
-    collection.timestamp = millis(); // get epoch here
+    collection.timestamp = TimeManager::GetEpoch();
     for (int i = 0; i < manager->getSensorCount(); i++)
     {
         Sensor *sensor = manager->getSensor(i);

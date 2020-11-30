@@ -8,13 +8,13 @@
 #include "SampleCollector.hpp"
 #include "StatusManager.hpp"
 #include "PowerManager.hpp"
+#include "TimeManager.hpp"
 
 /*
 
 TODO
 - Get epoch timestamp for sampleCollection
 - Set sample interval to 4 hours?
-- Find out how much heap we have left for sample buffer
 - Do an extra scan the moment the user requests for data
 
 */
@@ -30,11 +30,12 @@ void setup()
     sensorManager->SetupSensors();
     communicator->SetupConnection();
     StatusManager::Setup();
+    TimeManager::Setup();
 }
 
 void loop()
 {
-    delay(1000);
+    delay(3000);
 
     StatusManager::Show(0x0000FF, 2); // Notify about sampling
     sampleCollector->CollectSamples(sensorManager);

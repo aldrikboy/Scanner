@@ -2,6 +2,7 @@
 
 #include "../SensorManager.hpp"
 #include "../SampleCollector.hpp"
+#include <ArduinoUniqueID.h>
 
 class MessageHandler
 {
@@ -11,11 +12,12 @@ public:
 
 String MessageHandler::HandleMessage(String message, SampleCollector *sampleCollector)
 {
+    Serial.println("MESSAGE: " + message);
     if (message == "{COUNT}")
     {
         String response = "{";
         response += (String)sampleCollector->getSampleCount();
-        response += "}";
+        response += "}\n";
 
         return response;
     }
@@ -26,7 +28,12 @@ String MessageHandler::HandleMessage(String message, SampleCollector *sampleColl
         {
             SampleCollection collection = sampleCollector->PopSample();
 
-            response += (String) "T:";
+            response += (String) "I:";
+
+            for (size_t i = 0; i < UniqueIDsize; i++)
+                response += (String)UniqueID[i];
+
+            response += (String) ",T:";
             response += (String)collection.timestamp;
 
             for (int i = 0; i < collection.sampleCount; i++)
@@ -38,7 +45,7 @@ String MessageHandler::HandleMessage(String message, SampleCollector *sampleColl
                 response += (String) ":";
                 response += (String)sample.sample;
             }
-            response += "}";
+            response += "}\n";
 
             return response;
         }
@@ -48,5 +55,5 @@ String MessageHandler::HandleMessage(String message, SampleCollector *sampleColl
         // Unknown message received.
     }
 
-    return "{}";
+    return "{}\n";
 }

@@ -6,11 +6,14 @@
 #include "Sensors/TemperatureSensor.hpp"
 #include "Sensors/HumiditySensor.hpp"
 #include "Sensors/SoilMoistureSensor.hpp"
+#include "Sensors/BarometerSensor.hpp"
+#include "Sensors/UVSensor.hpp"
 
 // Pin configuration
 #define PIN_TEMPERATURE 3
 #define PIN_HUMIDITY 3
 #define PIN_SOILMOISTURE A0
+#define PIN_UV A3
 
 class SensorManager
 {
@@ -39,4 +42,6 @@ void SensorManager::SetupSensors()
     sensors[sensorCount++] = new HumiditySensor('L', PIN_HUMIDITY);
     sensors[sensorCount++] = new TemperatureSensor('C', PIN_TEMPERATURE);
     sensors[sensorCount++] = new SoilMoistureSensor('S', PIN_SOILMOISTURE);
+    sensors[sensorCount++] = new BarometerSensor('B');
+    sensors[sensorCount++] = new UVSensor('U', PIN_UV);
 }
