@@ -1,6 +1,8 @@
-#define PIN_LED_R 12
-#define PIN_LED_G 11
-#define PIN_LED_B 10
+#pragma once
+
+#define PIN_LED_R 4
+#define PIN_LED_G 9
+#define PIN_LED_B 5
 
 class StatusManager
 {

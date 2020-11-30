@@ -42,6 +42,6 @@ void SensorManager::SetupSensors()
     sensors[sensorCount++] = new HumiditySensor('L', PIN_HUMIDITY);
     sensors[sensorCount++] = new TemperatureSensor('C', PIN_TEMPERATURE);
     sensors[sensorCount++] = new SoilMoistureSensor('S', PIN_SOILMOISTURE);
-    sensors[sensorCount++] = new BarometerSensor('B');
-    sensors[sensorCount++] = new UVSensor('U', PIN_UV);
+    //sensors[sensorCount++] = new BarometerSensor('B');
+    //sensors[sensorCount++] = new UVSensor('U', PIN_UV);
 }

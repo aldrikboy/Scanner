@@ -13,9 +13,9 @@
 /*
 
 TODO
-- Get epoch timestamp for sampleCollection
 - Set sample interval to 4 hours?
-- Do an extra scan the moment the user requests for data
+- Write data to SD card
+- begin returning data from bottom instead of top of samples to return oldest first
 
 */
 
