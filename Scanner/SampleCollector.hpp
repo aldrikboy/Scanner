@@ -1,8 +1,6 @@
 #pragma once
 
 #include "SensorManager.hpp"
-
-#include <stdio.h>
 #include "TimeManager.hpp"
 
 #define MAX_SAMPLE_STORAGE 10

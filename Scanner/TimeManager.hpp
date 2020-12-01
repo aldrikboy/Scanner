@@ -25,9 +25,9 @@ void TimeManager::Setup()
 void TimeManager::SetTime()
 {
     // clock.begin();
-    // clock.fillByYMD(2020, 11, 30); //Jan 19,2013
-    // clock.fillByHMS(11, 47, 50);   //15:28 30"
-    // clock.fillDayOfWeek(MON);      //Saturday
+    // clock.fillByYMD(2020, 11, 30);
+    // clock.fillByHMS(11, 47, 50);
+    // clock.fillDayOfWeek(MON);
     // clock.setTime();               //write time to the RTC chip
 }
 

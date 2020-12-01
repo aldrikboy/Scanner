@@ -9,6 +9,9 @@
 #include "StatusManager.hpp"
 #include "PowerManager.hpp"
 #include "TimeManager.hpp"
+//#include "StorageManager.hpp"
+
+#include <MemoryFree.h>
 
 /*
 
@@ -31,6 +34,10 @@ void setup()
     communicator->SetupConnection();
     StatusManager::Setup();
     TimeManager::Setup();
+
+    //StorageManager::Setup();
+
+    Serial.println("Available bytes: " + (String)freeMemory());
 }
 
 void loop()
