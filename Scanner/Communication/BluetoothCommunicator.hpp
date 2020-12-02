@@ -6,8 +6,8 @@
 
 using namespace std;
 
-#define RxD 6
-#define TxD 7
+#define RxD 10
+#define TxD 11
 
 #define DEBUG_ENABLED 1
 
@@ -51,8 +51,8 @@ void BluetoothCommunicator::SendData(char data)
 
 void BluetoothCommunicator::SetupConnection()
 {
-    // Set BluetoothBee BaudRate to default baud rate 38400
-    blueToothSerial.begin(38400);
+    // Set BluetoothBee BaudRate to default baud rate 9600
+    blueToothSerial.begin(9600);
 
     // set the bluetooth work in slave mode
     blueToothSerial.print("\r\n+STWMOD=0\r\n");
