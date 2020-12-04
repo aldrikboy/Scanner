@@ -20,15 +20,17 @@ void TimeManager::Setup()
     {
         Serial.println("Couldn't find RTC");
     }
+
+    //SetTime();
 }
 
 void TimeManager::SetTime()
 {
-    // clock.begin();
-    // clock.fillByYMD(2020, 11, 30);
-    // clock.fillByHMS(11, 47, 50);
-    // clock.fillDayOfWeek(MON);
-    // clock.setTime();               //write time to the RTC chip
+    if (!clock.isrunning())
+    {
+        // this will adjust to the date and time stored in the RTC
+        clock.adjust(DateTime(2020, 12, 4, 9, 27, 30));
+    }
 }
 
 time_t TimeManager::GetEpoch()
