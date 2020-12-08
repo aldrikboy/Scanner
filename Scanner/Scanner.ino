@@ -9,7 +9,7 @@
 #include "StatusManager.hpp"
 #include "PowerManager.hpp"
 #include "TimeManager.hpp"
-//#include "StorageManager.hpp"
+#include "StorageManager.hpp"
 
 #include <MemoryFree.h>
 
@@ -19,10 +19,13 @@ TODO
 - Set sample interval to 4 hours?
 - Write data to SD card
 - begin returning data from bottom instead of top of samples to return oldest first
-
+- Handle errors and display on leds
+- make constants for led colors
+- are leds PWM?
+- maak legenda voor statusmanager
 */
 
-Communicator *communicator = new BluetoothCommunicator("ecoGrounder Scanner");
+Communicator *communicator = new BluetoothCommunicator("");
 SensorManager *sensorManager = new SensorManager();
 SampleCollector *sampleCollector = new SampleCollector();
 
@@ -35,18 +38,21 @@ void setup()
     StatusManager::Setup();
     TimeManager::Setup();
 
-    //StorageManager::Setup();
+    if (!StorageManager::Setup())
+        StatusManager::Report(0xFFFF00);
 
-    Serial.println("Available bytes: " + (String)freeMemory());
+    StorageManager::ClearData();
+
+    //Serial.println("Available bytes: " + (String)freeMemory());
+    //Serial.println("Max samples: " + (String)((unsigned long)MAX_STORED_SAMPLES) + ", Stored: " + (String)StorageManager::ReadSampleCount());
 }
 
 void loop()
 {
-    delay(3000);
+    delay(5000);
 
     StatusManager::Show(0x0000FF, 2); // Notify about sampling
     sampleCollector->CollectSamples(sensorManager);
-
     if (communicator->IsConnected())
     {
         StatusManager::Show(0x00FF00, 2); // Notify about message handling

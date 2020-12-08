@@ -12,7 +12,7 @@ public:
 
 String MessageHandler::HandleMessage(String message, SampleCollector *sampleCollector)
 {
-    Serial.println("MESSAGE: " + message);
+    //Serial.println("MESSAGE: " + message);
     if (message == "{COUNT}")
     {
         String response = "{";
@@ -23,30 +23,23 @@ String MessageHandler::HandleMessage(String message, SampleCollector *sampleColl
     }
     else if (message == "{UPDATE}")
     {
-        String response = "{";
         if (sampleCollector->getSampleCount())
         {
-            SampleCollection collection = sampleCollector->PopSample();
+            String response = "{";
 
-            response += (String) "I:";
+            String data = sampleCollector->PopSample();
 
-            for (size_t i = 0; i < UniqueIDsize; i++)
-                response += (String)UniqueID[i];
-
-            response += (String) ",T:";
-            response += (String)collection.timestamp;
-
-            for (int i = 0; i < collection.sampleCount; i++)
+            if (data != "")
             {
-                response += ",";
-                Sample sample = collection.samples[i];
+                response += (String) "I:";
 
-                response += (String)sample.identifier;
-                response += (String) ":";
-                response += (String)sample.sample;
+                for (size_t i = 0; i < UniqueIDsize; i++)
+                    response += (String)UniqueID[i];
+                response += ",";
+
+                response += data;
             }
             response += "}\n";
-
             return response;
         }
     }

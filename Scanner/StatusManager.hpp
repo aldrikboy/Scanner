@@ -10,6 +10,7 @@ public:
     static void Setup();
     static void TurnOff();
     static void TurnOn();
+    static void Report(long color);
     static void Show(long color, int repeat = 1);
 
 private:
@@ -39,6 +40,14 @@ void StatusManager::TurnOff()
     analogWrite(PIN_LED_R, 0);
     analogWrite(PIN_LED_G, 0);
     analogWrite(PIN_LED_B, 0);
+}
+
+void StatusManager::Report(long color)
+{
+    while (1)
+    {
+        Show(color, 1);
+    }
 }
 
 void StatusManager::Show(long color, int repeat = 1)

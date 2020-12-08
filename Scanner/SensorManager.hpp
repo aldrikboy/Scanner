@@ -1,13 +1,13 @@
 #pragma once
 
-#define MAX_SENSORS 6
+#define MAX_SENSORS 3
 
 #include "Sensors/Sensor.hpp"
 #include "Sensors/TemperatureSensor.hpp"
 #include "Sensors/HumiditySensor.hpp"
 #include "Sensors/SoilMoistureSensor.hpp"
-#include "Sensors/BarometerSensor.hpp"
-#include "Sensors/UVSensor.hpp"
+//#include "Sensors/BarometerSensor.hpp"
+//#include "Sensors/UVSensor.hpp"
 
 // Pin configuration
 #define PIN_TEMPERATURE 3

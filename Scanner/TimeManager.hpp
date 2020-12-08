@@ -18,7 +18,8 @@ void TimeManager::Setup()
 {
     if (!clock.begin())
     {
-        Serial.println("Couldn't find RTC");
+        // return false here
+        //Serial.println("Couldn't find RTC");
     }
 
     //SetTime();

@@ -6,8 +6,8 @@
 
 using namespace std;
 
-#define RxD 10
-#define TxD 11
+#define RxD 6
+#define TxD 7
 
 #define DEBUG_ENABLED 1
 
@@ -54,23 +54,23 @@ void BluetoothCommunicator::SetupConnection()
     // Set BluetoothBee BaudRate to default baud rate 9600
     blueToothSerial.begin(9600);
 
-    // set the bluetooth work in slave mode
-    blueToothSerial.print("\r\n+STWMOD=0\r\n");
+    // // set the bluetooth work in slave mode
+    // blueToothSerial.print("\r\n+STWMOD=0\r\n");
 
-    // set the bluetooth name as "SeeedBTSlave"
-    blueToothSerial.print("\r\n+STNA=" + (String)this->displayName + "\r\n");
+    // // set the bluetooth name as "SeeedBTSlave"
+    // blueToothSerial.print("\r\n+STNA=" + (String)this->displayName + "\r\n");
 
-    // Permit Paired device to connect me
-    blueToothSerial.print("\r\n+STOAUT=1\r\n");
+    // // Permit Paired device to connect me
+    // blueToothSerial.print("\r\n+STOAUT=1\r\n");
 
-    // Auto-connection should be forbidden here
-    blueToothSerial.print("\r\n+STAUTO=0\r\n");
+    // // Auto-connection should be forbidden here
+    // blueToothSerial.print("\r\n+STAUTO=0\r\n");
 
     // This delay is required.
     delay(2000);
 
     // make the slave bluetooth inquirable
-    blueToothSerial.print("\r\n+INQ=1\r\n");
+    // blueToothSerial.print("\r\n+INQ=1\r\n");
 
     Serial.println("The slave bluetooth is inquirable!");
 
