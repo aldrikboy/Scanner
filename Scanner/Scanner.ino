@@ -16,16 +16,15 @@
 /*
 
 TODO
+- write offset of next collection to return to new file to stop iterating over entire file
 - Set sample interval to 4 hours?
-- Write data to SD card
-- begin returning data from bottom instead of top of samples to return oldest first
 - Handle errors and display on leds
 - make constants for led colors
 - are leds PWM?
 - maak legenda voor statusmanager
 */
 
-Communicator *communicator = new BluetoothCommunicator("");
+Communicator *communicator = new BluetoothCommunicator();
 SensorManager *sensorManager = new SensorManager();
 SampleCollector *sampleCollector = new SampleCollector();
 

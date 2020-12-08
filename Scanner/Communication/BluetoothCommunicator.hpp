@@ -14,12 +14,11 @@ using namespace std;
 class BluetoothCommunicator : public Communicator
 {
 public:
-    BluetoothCommunicator(char *displayName);
+    BluetoothCommunicator();
     void SetupConnection();
 
 private:
     SoftwareSerial blueToothSerial;
-    char *displayName = 0;
 
 protected:
     virtual bool DataAvailable() override;
@@ -27,9 +26,8 @@ protected:
     virtual void SendData(char data) override;
 };
 
-BluetoothCommunicator::BluetoothCommunicator(char *displayName) : blueToothSerial(RxD, TxD)
+BluetoothCommunicator::BluetoothCommunicator() : blueToothSerial(RxD, TxD)
 {
-    this->displayName = displayName;
     pinMode(RxD, INPUT);
     pinMode(TxD, OUTPUT);
 }
@@ -58,7 +56,7 @@ void BluetoothCommunicator::SetupConnection()
     // blueToothSerial.print("\r\n+STWMOD=0\r\n");
 
     // // set the bluetooth name as "SeeedBTSlave"
-    // blueToothSerial.print("\r\n+STNA=" + (String)this->displayName + "\r\n");
+    // blueToothSerial.print("\r\n+STNA=ecoGrounder\r\n");
 
     // // Permit Paired device to connect me
     // blueToothSerial.print("\r\n+STOAUT=1\r\n");
@@ -72,7 +70,8 @@ void BluetoothCommunicator::SetupConnection()
     // make the slave bluetooth inquirable
     // blueToothSerial.print("\r\n+INQ=1\r\n");
 
-    Serial.println("The slave bluetooth is inquirable!");
+    Serial.print("Stage");
+    Serial.println("1");
 
     // This delay is required.
     delay(2000);
