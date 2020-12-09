@@ -10,8 +10,8 @@
 //#include "Sensors/UVSensor.hpp"
 
 // Pin configuration
-#define PIN_TEMPERATURE 3
-#define PIN_HUMIDITY 3
+#define PIN_TEMPERATURE 4
+#define PIN_HUMIDITY 4
 #define PIN_SOILMOISTURE A0
 #define PIN_UV A3
 

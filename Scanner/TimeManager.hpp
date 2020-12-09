@@ -9,19 +9,20 @@ RTC_DS1307 clock;
 class TimeManager
 {
 public:
-    static void Setup();
+    static bool Setup();
     static time_t GetEpoch();
     static void SetTime();
 };
 
-void TimeManager::Setup()
+bool TimeManager::Setup()
 {
     if (!clock.begin())
     {
-        // return false here
         //Serial.println("Couldn't find RTC");
+        return false;
     }
 
+    return true;
     //SetTime();
 }
 

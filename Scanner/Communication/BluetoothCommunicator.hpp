@@ -70,9 +70,6 @@ void BluetoothCommunicator::SetupConnection()
     // make the slave bluetooth inquirable
     // blueToothSerial.print("\r\n+INQ=1\r\n");
 
-    Serial.print("Stage");
-    Serial.println("1");
-
     // This delay is required.
     delay(2000);
     blueToothSerial.flush();

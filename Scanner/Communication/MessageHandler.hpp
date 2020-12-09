@@ -35,7 +35,7 @@ String MessageHandler::HandleMessage(String message, SampleCollector *sampleColl
 
                 for (size_t i = 0; i < UniqueIDsize; i++)
                     response += (String)UniqueID[i];
-                response += ",";
+                response += ',';
 
                 response += data;
             }

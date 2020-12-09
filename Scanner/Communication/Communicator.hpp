@@ -64,7 +64,7 @@ void Communicator::HandleIncommingMessages(SampleCollector *sampleCollector)
     while (Serial.available())
     {
         recvChar = Serial.read();
-        //this->SendData(recvChar);
+        this->SendData(recvChar);
     }
 }
 

@@ -16,29 +16,39 @@
 /*
 
 TODO
-- write offset of next collection to return to new file to stop iterating over entire file
 - Set sample interval to 4 hours?
-- Handle errors and display on leds
-- make constants for led colors
-- are leds PWM?
 - maak legenda voor statusmanager
+- remove global File variable
 */
 
 Communicator *communicator = new BluetoothCommunicator();
 SensorManager *sensorManager = new SensorManager();
 SampleCollector *sampleCollector = new SampleCollector();
 
+#define REPORT_FASE(_f)    \
+    Serial.print("Fase "); \
+    Serial.println(#_f);
+
 void setup()
 {
     Serial.begin(9600);
 
-    sensorManager->SetupSensors();
-    communicator->SetupConnection();
+    REPORT_FASE(1);
     StatusManager::Setup();
-    TimeManager::Setup();
 
+    REPORT_FASE(2);
+    sensorManager->SetupSensors();
+
+    REPORT_FASE(3);
+    communicator->SetupConnection();
+
+    REPORT_FASE(4);
+    if (!TimeManager::Setup())
+        StatusManager::Report(COLOR_RED);
+
+    REPORT_FASE(5);
     if (!StorageManager::Setup())
-        StatusManager::Report(0xFFFF00);
+        StatusManager::Report(COLOR_GREEN);
 
     StorageManager::ClearData();
 
@@ -48,8 +58,6 @@ void setup()
 
 void loop()
 {
-    delay(5000);
-
     StatusManager::Show(0x0000FF, 2); // Notify about sampling
     sampleCollector->CollectSamples(sensorManager);
     if (communicator->IsConnected())
@@ -62,5 +70,5 @@ void loop()
         StatusManager::Show(0xFF0000, 2); // Notify about communication error
     }
 
-    //PowerManager::WaitForNextIteration();
+    delay(5000);
 }

@@ -1,11 +1,11 @@
 #pragma once
 
 #include <SD.h>
-#include <stdlib.h>
 #include "SampleCollector.hpp"
 
 #define DATA_FILE_NAME "d"
 #define COUNT_FILE_NAME "c"
+#define OFFSET_FILE_NAME "o"
 
 // 14.4gb effective storage on 16gb card
 #define SENSOR_SAMPLE_RESERVE_SLOTS 8                                                // Reserve 8 slots for future expansions
@@ -25,167 +25,21 @@ public:
     static String PopSample();
 
 private:
-    int NextLine(char *buffer, int bufLength);
+    static long ReadSampleOffset();
+    static void WriteSampleOffset(long number);
+    static void WriteNumber(String fileName, long number);
+    static long ReadNumber(String fileName);
+    static void CreateEmpty(String name);
     static bool initialized;
-    static File file;
 };
 
 bool StorageManager::initialized = false;
-File StorageManager::file;
 
-bool StorageManager::Setup()
+long StorageManager::ReadNumber(String fileName)
 {
-    if (!SD.begin(10))
-    {
-        return false;
-    }
-
-    StorageManager::initialized = true;
-
-    if (!SD.exists(COUNT_FILE_NAME))
-    {
-        // Create empty count file
-        file = SD.open(COUNT_FILE_NAME, FILE_WRITE);
-        file.close();
-    }
-
-    if (!SD.exists(DATA_FILE_NAME))
-    {
-        // Create empty data file
-        file = SD.open(DATA_FILE_NAME, FILE_WRITE);
-        file.close();
-    }
-
-    return true;
-}
-
-void StorageManager::ClearData()
-{
-    StorageManager::WriteSampleCount(0);
-    file = SD.open(DATA_FILE_NAME, O_READ | O_WRITE | O_CREAT | O_TRUNC);
-    if (file)
-    {
-        file.seek(0);
-        file.flush();
-        file.close();
-    }
-}
-
-String StorageManager::PopSample()
-{
-    if (ReadSampleCount() == 0)
-        return "";
-
-    file = SD.open(DATA_FILE_NAME, O_READ | O_WRITE);
+    File file = SD.open(fileName, FILE_READ);
     if (!file)
-    {
-        // Read failure
         return;
-    }
-
-    // Read olders sample
-    file.seek(0);
-    String result = "";
-    bool isNewCollection = false;
-    while (file.available())
-    {
-        char ch = file.peek();
-        if (ch == '\n' || ch == '\r')
-        {
-            if (isNewCollection)
-            {
-                break;
-            }
-            else
-            {
-                file.read();
-                result = "";
-                continue;
-            }
-        }
-        if (ch == 'T')
-        {
-            file.write('X'); // Replace T with X here. Marking collection as old.
-            isNewCollection = true;
-        }
-        else
-        {
-            file.read();
-        }
-        result += ch;
-    }
-
-    file.close();
-
-    StorageManager::WriteSampleCount(ReadSampleCount() - 1);
-
-    return result;
-}
-
-void StorageManager::PushSample(SampleCollection collection)
-{
-    String data = "";
-    data += (String) "T:";
-    data += (String)collection.timestamp;
-
-    for (int i = 0; i < collection.sampleCount; i++)
-    {
-        data += ",";
-        Sample sample = collection.samples[i];
-
-        data += (String)sample.identifier;
-        data += (String) ":";
-        data += (String)sample.sample;
-    }
-
-    file = SD.open(DATA_FILE_NAME, O_READ | O_WRITE | O_CREAT);
-    if (!file)
-    {
-        // Read failure
-        return;
-    }
-
-    file.seek(file.size());
-    file.println(data);
-    file.flush();
-
-    // Uncomment to print file content to Serial
-    // Serial.println("");
-    // file.seek(0);
-    // while (file.available())
-    // {
-    //     Serial.print((char)file.read());
-    // }
-
-    int size = file.size();
-    file.close();
-
-    StorageManager::WriteSampleCount(ReadSampleCount() + 1);
-}
-
-void StorageManager::WriteSampleCount(unsigned long count)
-{
-    file = SD.open(COUNT_FILE_NAME, O_READ | O_WRITE | O_CREAT | O_TRUNC);
-    if (!file)
-    {
-        // Read failure
-        return;
-    }
-
-    file.seek(0);
-    int result = file.println((String)count);
-    file.flush();
-    file.close();
-}
-
-unsigned long StorageManager::ReadSampleCount()
-{
-    file = SD.open(COUNT_FILE_NAME, FILE_READ);
-    if (!file)
-    {
-        // Read failure
-        return;
-    }
 
     file.seek(0);
     String result = "";
@@ -199,4 +53,152 @@ unsigned long StorageManager::ReadSampleCount()
 
     file.close();
     return result.toInt();
+}
+
+void StorageManager::WriteNumber(String fileName, long number)
+{
+    File file = SD.open(fileName, O_READ | O_WRITE | O_CREAT | O_TRUNC);
+    if (!file)
+        return;
+
+    file.seek(0);
+    file.println((String)number);
+    file.flush();
+    file.close();
+}
+
+void StorageManager::CreateEmpty(String name)
+{
+    if (!SD.exists(name))
+    {
+        // Create empty file
+        File file = SD.open(name, FILE_WRITE);
+        file.close();
+    }
+}
+
+bool StorageManager::Setup()
+{
+    if (!SD.begin(10))
+    {
+        return false;
+    }
+
+    StorageManager::initialized = true;
+
+    CreateEmpty(COUNT_FILE_NAME);
+    CreateEmpty(DATA_FILE_NAME);
+    CreateEmpty(OFFSET_FILE_NAME);
+
+    return true;
+}
+
+void StorageManager::ClearData()
+{
+    StorageManager::WriteSampleCount(0);
+    StorageManager::WriteSampleOffset(0);
+    File file = SD.open(DATA_FILE_NAME, O_READ | O_WRITE | O_CREAT | O_TRUNC);
+    if (file)
+    {
+        file.seek(0);
+        file.flush();
+        file.close();
+    }
+}
+
+String StorageManager::PopSample()
+{
+    if (ReadSampleCount() == 0)
+        return "";
+
+    long offset = ReadSampleOffset();
+
+    File file = SD.open(DATA_FILE_NAME, O_READ | O_WRITE);
+    if (!file)
+    {
+        // Read failure
+        return;
+    }
+
+    // Read olders sample
+    file.seek(offset);
+    String result = "";
+    while (file.available())
+    {
+        char ch = file.read();
+        if (ch == '\n' || ch == '\r')
+        {
+            break;
+        }
+        result += ch;
+    }
+
+    file.close();
+
+    StorageManager::WriteSampleCount(ReadSampleCount() - 1);
+    StorageManager::WriteSampleOffset(offset + result.length() + 2);
+
+    return result;
+}
+
+void StorageManager::PushSample(SampleCollection collection)
+{
+    String data = "";
+    data += (String) "T:";
+    data += (String)collection.timestamp;
+
+    for (int i = 0; i < collection.sampleCount; i++)
+    {
+        data += ',';
+        Sample sample = collection.samples[i];
+
+        data += (String)sample.identifier;
+        data += (String)':';
+        data += (String)sample.sample;
+    }
+
+    File file = SD.open(DATA_FILE_NAME, O_READ | O_WRITE | O_CREAT);
+    if (!file)
+    {
+        // Read failure
+        return;
+    }
+
+    file.seek(file.size());
+    file.println(data);
+    file.flush();
+
+    // Uncomment to print file content to Serial
+#if 0
+    Serial.println("");
+    file.seek(0);
+    while (file.available())
+    {
+        Serial.print((char)file.read());
+    }
+#endif
+
+    file.close();
+
+    StorageManager::WriteSampleCount(ReadSampleCount() + 1);
+}
+
+void StorageManager::WriteSampleCount(unsigned long count)
+{
+    WriteNumber(COUNT_FILE_NAME, count);
+}
+
+unsigned long StorageManager::ReadSampleCount()
+{
+    return ReadNumber(COUNT_FILE_NAME);
+}
+
+void StorageManager::WriteSampleOffset(long number)
+{
+    WriteNumber(OFFSET_FILE_NAME, number);
+}
+
+long StorageManager::ReadSampleOffset()
+{
+    return ReadNumber(OFFSET_FILE_NAME);
 }

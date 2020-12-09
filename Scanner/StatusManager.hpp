@@ -1,8 +1,17 @@
 #pragma once
 
-#define PIN_LED_R 4
+#define PIN_LED_R 3
 #define PIN_LED_G 9
 #define PIN_LED_B 5
+
+#define COLOR_RED 0xFF0000
+#define COLOR_GREEN 0x00FF00
+#define COLOR_BLUE 0x0000FF
+
+#define COLOR_YELLOW (COLOR_RED | COLOR_GREEN)
+#define COLOR_PURPLE (COLOR_RED | COLOR_BLUE)
+#define COLOR_CYAN (COLOR_GREEN | COLOR_BLUE)
+#define COLOR_WHITE (COLOR_RED | COLOR_GREEN | COLOR_BLUE)
 
 class StatusManager
 {
