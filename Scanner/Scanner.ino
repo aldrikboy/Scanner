@@ -58,11 +58,11 @@ void setup()
 
 void loop()
 {
-    StatusManager::Show(0x0000FF, 2); // Notify about sampling
+    StatusManager::Show(COLOR_BLUE, 2); // Notify about sampling
     sampleCollector->CollectSamples(sensorManager);
     if (communicator->IsConnected())
     {
-        StatusManager::Show(0x00FF00, 2); // Notify about message handling
+        StatusManager::Show(COLOR_GREEN, 2); // Notify about message handling
         communicator->HandleIncommingMessages(sampleCollector);
     }
     else
