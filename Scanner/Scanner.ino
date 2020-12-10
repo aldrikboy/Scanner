@@ -16,9 +16,12 @@
 /*
 
 TODO
-- Set sample interval to 4 hours?
-- maak legenda voor statusmanager
-- remove global File variable
+- Set sample interval to 1 hours?
+- SD kaart POC documenteren
+- levensduur documenteren
+- batterij documenteren
+- Documenteren wat we hebben geprobeerd om energie te besparen
+- hardware diagram maken voor complete apparaat
 */
 
 Communicator *communicator = new BluetoothCommunicator();
@@ -67,7 +70,7 @@ void loop()
     }
     else
     {
-        StatusManager::Show(0xFF0000, 2); // Notify about communication error
+        StatusManager::Show(COLOR_RED, 2); // Notify about communication error
     }
 
     delay(5000);
