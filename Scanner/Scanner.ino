@@ -16,12 +16,12 @@
 /*
 
 TODO
-- Set sample interval to 1 hours?
 - SD kaart POC documenteren
 - levensduur documenteren
 - batterij documenteren
 - Documenteren wat we hebben geprobeerd om energie te besparen
 - hardware diagram maken voor complete apparaat
+- write test cases
 */
 
 Communicator *communicator = new BluetoothCommunicator();
@@ -31,6 +31,10 @@ SampleCollector *sampleCollector = new SampleCollector();
 #define REPORT_FASE(_f)    \
     Serial.print("Fase "); \
     Serial.println(#_f);
+
+#define SAMPLE_INTERVAL_TIME_SEC 60 * 1 // 1 Minute
+
+time_t lastSampleTimestamp = 0;
 
 void setup()
 {
@@ -61,8 +65,16 @@ void setup()
 
 void loop()
 {
-    StatusManager::Show(COLOR_BLUE, 2); // Notify about sampling
-    sampleCollector->CollectSamples(sensorManager);
+    time_t timestamp = TimeManager::GetEpoch();
+
+    if (timestamp - lastSampleTimestamp >= SAMPLE_INTERVAL_TIME_SEC)
+    {
+        StatusManager::Show(COLOR_BLUE, 2); // Notify about sampling
+        sampleCollector->CollectSamples(sensorManager);
+
+        lastSampleTimestamp = timestamp;
+    }
+
     if (communicator->IsConnected())
     {
         StatusManager::Show(COLOR_GREEN, 2); // Notify about message handling
@@ -73,5 +85,5 @@ void loop()
         StatusManager::Show(COLOR_RED, 2); // Notify about communication error
     }
 
-    delay(5000);
+    PowerManager::Sleep();
 }
