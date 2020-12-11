@@ -16,10 +16,7 @@
 /*
 
 TODO
-- SD kaart POC documenteren
-- levensduur documenteren
 - batterij documenteren
-- Documenteren wat we hebben geprobeerd om energie te besparen
 - hardware diagram maken voor complete apparaat
 - write test cases
 */
