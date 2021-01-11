@@ -60,12 +60,14 @@ void Communicator::HandleIncommingMessages(SampleCollector *sampleCollector)
         }
     }
 
-    // For debugging purposes, send data from serial to communicator.
+// For debugging purposes, send data from serial to communicator.
+#if 0
     while (Serial.available())
     {
         recvChar = Serial.read();
         this->SendData(recvChar);
     }
+#endif
 }
 
 bool Communicator::IsConnected()

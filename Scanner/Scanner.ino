@@ -13,14 +13,6 @@
 
 #include <MemoryFree.h>
 
-/*
-
-TODO
-- batterij documenteren
-- hardware diagram maken voor complete apparaat
-- write test cases
-*/
-
 Communicator *communicator = new BluetoothCommunicator();
 SensorManager *sensorManager = new SensorManager();
 SampleCollector *sampleCollector = new SampleCollector();

@@ -22,8 +22,8 @@ bool TimeManager::Setup()
         return false;
     }
 
-    return true;
     //SetTime();
+    return true;
 }
 
 void TimeManager::SetTime()
@@ -31,7 +31,7 @@ void TimeManager::SetTime()
     if (!clock.isrunning())
     {
         // this will adjust to the date and time stored in the RTC
-        clock.adjust(DateTime(2020, 12, 4, 9, 27, 30));
+        clock.adjust(DateTime(2021, 1, 11, 9, 12, 30));
     }
 }
 
